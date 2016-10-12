@@ -1,0 +1,129 @@
+# Python 2.7.12
+#
+# Author: Madison Dunning
+#
+# Purpose:  The exercises from chapter 6
+
+import math
+
+# Exercise 6-1,
+# Write a compare function that
+# returns 1 if x > y, 0 if x == y, and -1 if x < y.
+def compare(x, y):
+    if x > y:
+        return 1
+    elif x == y:
+        return 0
+    else:
+        return -1
+
+
+# Exercise 6-2
+# Use incremental development to write
+# a function called hypotenuse that returns the
+# length of the hypotenuse of a right triangle given the lengths
+# of the two legs as arguments.
+def hypotenuse(x, y):
+    return math.sqrt(x ** 2 + y ** 2)
+
+print hypotenuse(3, 4)
+
+
+# Exercise 6-3
+# Write a function is_between(x, y, z) that returns
+# True if x ≤ y ≤ z or False otherwise
+x = int(raw_input('x?\n'))
+y = int(raw_input('y?\n'))
+z = int(raw_input('z?\n'))
+ 
+def is_between(x, y, z):
+    return x <= y and y <= z
+ 
+a = is_between(x, y, z)
+if a:
+    print 'y is between x and z'
+else:
+    print 'y not between x and z'
+
+
+# Ecercise 6-4
+# Draw a stack diagram for the following program.
+# What does the program print?
+def b(z):
+ prod = a(z, z)
+ print z, prod
+ return prod
+
+def a(x, y):
+ x = x + 1
+ return x * y
+
+def c(x, y, z):
+ total = x + y + z
+ square = b(total)**2
+ return square
+
+x = 1
+y = x + 1
+print c(x, y+3, x+y)
+# The program prints 8100. c() calls b() with the sum of 1, 5, 3 which is 9.
+# b() then calls a(9, 9). The first 9 has 1 added to it so a returns
+# 10 * 9 = 90. b() returns 90 to c() and c() sqaures it so c() returns 8100.
+
+
+# Exercise 6-5
+# Write a function named ack that evaluates Ackermann’s function.
+# Use your function to evaluate ack(3, 4), which should be 125. What happens
+# for larger values of m and n?
+m = 3
+n = 4
+
+def ack(m, n):
+    if m == 0:
+        return n + 1
+    elif n == 0:
+        return ack(m - 1, 1)
+    else:
+        return ack(m - 1, ack(m, n - 1))
+ack(m, n)
+# For larger values of m and n this function kind of goes nuts
+
+
+# Exercise 6-6
+# Write a function called is_palindrome that takes a string argument and
+# returns True if it is a palindrome and False otherwise. 
+word = raw_input('Check to see if it is a palendrome\n')
+
+
+def is_palindrome(word):
+    if len(word) <= 2 and word[0] == word[-1]:
+        print 'True'
+    elif word[0] == word[-1]:
+        is_palindrome(word[1:-1])
+    else:
+        print 'False'
+
+is_palindrome(word)
+
+
+
+# Exercise 6-7
+# Write a function
+# called is_power that takes parameters a and b and returns
+# True if a is a power of b.
+def is_power(a,b):
+if a == 1:
+    return True
+elif a%b == 0 and is_power(a/b, b) == True:
+    return True
+else:
+    return False
+
+
+# Exercise 6-8
+# Write a function called gcd that takes parameters a and b and
+# returns their greatest common divisor.
+def gcd(a, b):
+    while b != 0:
+        (a, b) = (b, a % b)
+    return a
