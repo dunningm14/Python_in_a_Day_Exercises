@@ -1,0 +1,169 @@
+# Python 2.7.12
+#
+# Author: Madison Dunning
+#
+# Purpose:  The exercises from chapter 8
+
+import math
+
+# Exercise 8-1
+# Write a function that takes a string as an argument and displays
+# the letters backward, one per line.
+fruit = 'banana'
+index = len(fruit) - 1
+while index >= 0:
+    letter = fruit[index]
+    print letter
+    index = index - 1
+    
+
+# Exercise 8-2
+# program modified to fix error.
+for letter in prefixes:
+        if letter in ('O', 'Q'):  # if the letter is O or Q
+            print letter + 'u' + suffix
+        else:
+            print letter + suffix
+            
+
+# Exercise 8-3
+# Given that fruit is a string, what does fruit[:] mean?
+# it is an empty string, and contains no characters and has
+# length 0
+
+
+
+# Exercise 8-4
+# Modify find so that it has a third parameter, the index in
+# word where it should start looking.
+word = raw_input('What word?\n')
+letter = raw_input('What letter?\n')
+index = int(raw_input('Where to start?\n'))
+ 
+def find(word, letter, index):
+   result = 0
+   while index < len(word):
+       if word[index] == letter:
+           print index
+           result = index
+       index += 1
+   if result == 0: 
+       print -1
+ 
+find(word, letter, index)
+
+
+# Exercise 8-5
+# Encapsulate this code in a function named count, and generalize
+# it so that it accepts the string and the letter as arguments.
+def count(str, ch):
+	word = str
+	counter = 0
+	for char in word:
+		if char == ch:
+			counter = counter + 1
+	print counter
+
+# Exercise 8-6
+# Rewrite this function so that instead of traversing the string,
+# it uses the three-parameter version of find from the previous section.
+def count(word, letter):
+    result = 0
+    startat = 0
+    while startat < len(word):
+      next_letter_position = find(word, letter, startat)
+      if next_letter_position != -1:
+        result += 1
+        startat = next_letter_position + 1
+      else:
+        break
+    return result
+
+
+
+# Exercise 8-7
+# There is a string method called count that is similar to the function
+# in the previous exercise. Read the documentation of this method and
+# write an invocation that counts the number of as in 'banana'.
+w = "banana"
+l = "a"
+
+
+def count(word, letter):
+    return word.count(letter)
+    
+print count(w, l)
+
+
+# Exercise 8-8 & 8-9
+# this exercise didn't require any code => read the document
+
+
+
+# Exercise 8-9
+# Starting with this diagram, execute the program on paper, changing
+# the values of i and j during each iteration. Find and fix the second
+# error in this function.
+w = raw_input('Is it a palendrome?\n')
+ 
+def is_pal(w):
+  if w == w[::-1]:
+        print 'True'
+    else:
+        print 'False'
+ 
+is_pal(w)
+
+
+# Exercise 8-10
+# Using the outlined idiom to write a one-line version of is_palindrome
+def is_palindrome(s):
+    return s == s[::-1]
+
+
+
+# Exercise 8-11
+# For each function, describe what the function actually does
+"""
+any_lowercase1
+
+    This one is pretty self explanitory, however it is slightly flawed as it
+    does not recognize some formatting, such as tabs, and will return false.
+"""
+
+"""
+any_lowercase2
+
+    This will always return true, since it will only work with 'c'
+    as specified in the if statement.
+"""
+
+"""
+any_lowercase3
+
+    This will return the last character in lowercase, since the for loop
+    will cycle through all of them, but only return the value once it is done.
+"""
+
+"""
+any_lowercase4
+
+    This will return either 'False' or 'True' if the c is lowercase.
+"""
+
+"""
+any_lowercase5
+
+    This returns False if any character is lowercase,
+    True if they are all uppercase.
+"""
+    
+# Exercise 8-12
+# Write a function called rotate_word that takes a string and an integer
+# as parameters, and that returns a new string that contains the letters
+# from the original string “rotated” by the given amount.
+def rotate_word(s, shift):
+    result = ""
+    for char in s:
+        result += chr((((ord(char) + (shift % 26)) % 123) % 97) + 97)
+    return result
