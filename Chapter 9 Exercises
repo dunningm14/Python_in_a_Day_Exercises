@@ -1,0 +1,216 @@
+# Python 2.7.12
+#
+# Author: Madison Dunning
+#
+# Purpose:  The exercises from chapter 9
+
+
+# importing the built-in math functions
+import math
+
+# Exercise 9-1
+# Write a program that reads words.txt
+# and prints only the words with more than 20 characters
+# (not counting whitespace).
+word = open('words.txt')
+ 
+def words(word):
+    wordCount = 0
+    lineCount = 0
+    for line in word:
+        if len(line) >= 20:
+            print line
+            wordCount += 1
+        lineCount += 1
+    percent  = (float(wordCount) / float(lineCount)) * 100.0
+    print percent, '%'
+ 
+words(word)
+
+
+# Exercise 9-2
+# Write a function called has_no_e that returns True if
+# the given word doesn’t have the letter “e” in it. Modify your program
+# from the previous section to print only the words that have no “e” and
+# compute the percentage of the words in the list have no “e.” 
+word = open('words.txt')
+ 
+def words(word):
+    wordCount = 0
+    lineCount = 0
+    for line in word:
+        if line.find('e') == -1:
+            print line
+            wordCount += 1
+        lineCount += 1
+    percent  = (float(wordCount) / float(lineCount)) * 100.0
+    print percent, '%'
+ 
+words(word)
+
+
+# Exercise 9-3
+# Write a function named avoids that takes a word and a string of forbidden
+# letters, and that returns True if the word doesn’t use any of the forbidden
+# letters. Modify your program to prompt the user to enter a string of forbidden
+# letters and then print the number of words that don’t contain any of them.
+# Can you find a combination of 5 forbidden letters that excludes the smallest
+# number of words? 
+def avoids(word, forb):
+    for letter in forb:
+        if letter in word:
+            return False
+    return True
+
+def no_contain(fin):
+    forb = raw_input('enter the forbidden letters: ')
+    count = 0
+    for word in fin:
+        if avoids(word.strip(), forb):
+            count += 1
+    return count
+
+# Exercise 9-4
+# Write a function named uses_only that takes a word and a string of letters,
+# and that returns True if the word contains only letters in the list. Can you
+# make a sentence using only the letters acefhlo? Other than “Hoe alfalfa?” 
+def uses_only(word, only_letters):
+    i = 0
+    while i <len(word):
+        if word[i] in only_letters:
+            i+=1
+        else:
+            return False
+    return True
+
+
+# Exercise 9-5
+# Write a function named uses_all that takes a word and a string of required
+# letters, and that returns True if the word uses all the required letters at
+# least once. How many words are there that use all the vowels aeiou? How
+# about aeiouy? 
+def uses_all(word, required_letters):
+    for letter in required_letters:
+        if letter not in word: 
+            return False
+    return True
+
+
+# Exercose 9-6
+# Write a function called is_abecedarian that returns True if the letters in
+# a word appear in alphabetical order (double letters are ok). 
+def is_abcedarian(word):
+    splitter = []
+    for letter in word:
+        splitter.append(letter)
+    sorted = splitter[:] 
+    sorted.sort()
+    if splitter == sorted:
+        return True
+    else:
+        return False
+
+
+# Exercise 9-7
+# This question is based on a Puzzler that was broadcast on the radio program
+# Car Talk: Give me a word with three consecutive double letters. I’ll give
+# you a couple of words that almost qualify, but don’t. For example, the word
+# committee, c-o-m-m-i-t-t-e-e. It would be great except for the ‘i’ that sneaks
+# in there. Or Mississippi: M-i-s-s-i-s-s-i-p-p-i. If you could take out those
+# i’s it would work. But there is a word that has three consecutive pairs of
+# letters and to the best of my knowledge this may be the only word. Of course
+# there are probably 500 more but I can only think of one. What is the word?
+# Write a program to find it.
+with open('words.txt', 'r') as fd:
+    word_list = fd.read().split()
+
+
+def is_trip_pair(wordList):
+    for word in wordList:
+        i = 0
+        pairCount = 0
+        while i < len(word) - 1:
+            if word[i] == word[i + 1]:
+                pairCount += 1
+                if pairCount == 3:
+                    print word
+                i += 2
+            else:
+                pairCount = 0
+                i += 1
+
+is_trip_pair(word_list)
+
+
+# Exercise 9-8
+# “I was driving on the highway the other day and I happened to notice my
+# odometer. Like most odometers, it shows six digits, in whole miles only. So,
+# if my car had 300,000 miles, for example, I’d see 3-0-0-0-0-0. “Now, what I
+# saw that day was very interesting. I noticed that the last 4 digits were pal
+# indromic; that is, they read the same forward as backward. For example,
+# 5-4-4-5 is a palindrome, so my odometer could have read 3-1-5-4-4-5. “One
+# mile later, the last 5 numbers were palindromic. For example, it could have
+# read 3-6-5-4-5-6. One mile after that, the middle 4 out of 6 numbers were
+# palindromic. And you ready for this? One mile later, all 6 were palindromic!
+# “The question is, what was on the odometer when I first looked?” 
+# Write a Python program that tests all the six-digit numbers and prints any
+# numbers that satisfy these requirements. 
+def is_pal_num():
+    for i in range(100000, 1000000):
+        if str(i)[2:] == str(i)[:1:-1]:  # last 4
+            i += 1
+            if str(i)[1:] == str(i)[5:0:-1]:  # last 5
+                i += 1
+                if str(i)[1:-1] == str(i)[-2:0:-1]:  # middle 4
+                    i += 1
+                    if str(i) == str(i)[::-1]:  # all 6
+                        print i - 3
+
+is_pal_num()
+
+
+# Exercise 9-9
+# Recently I had a visit with my mom and we realized that the two digits that
+# make up my age when reversed resulted in her age. For example, if she’s 73,
+# I’m 37. We wondered how often this has happened over the years but we got side
+# tracked with other topics and we never came up with an answer. Exercises |
+# 103 “When I got home I figured out that the digits of our ages have been
+# reversible six times so far. I also figured out that if we’re lucky it would
+# happen again in a few years, and if we’re really lucky it would happen one
+# more time after that. In other words, it would have happened 8 times over all.
+# So the question is, how old am I now?” 
+# Write a Python program that searches for solutions to this Puzzler.
+# Hint: you might find the string method zfill useful
+def make_ages():
+    ages = []
+    for i in range(1, 100):
+        ages.append(str(i).zfill(2))
+    return ages
+     
+ages = make_ages()
+ 
+def is_palindrome(x, y):
+    return x[::-1] == y
+     
+def main():
+    diff = 12
+    candidates = []
+    while diff <= 45:
+        count = 0
+        for i in range(0, 99):
+            if i + diff > 98:
+                break
+            elif is_palindrome(ages[i], ages[i + diff]):
+                candidates.append((ages[i], ages[i + diff]))
+                count += 1
+        if count == 8:
+            return candidates
+        else:
+            count = 0
+            diff += 1
+            candidates = []
+    return candidates
+     
+candidates = main()
+ 
+print candidates[6][0]
