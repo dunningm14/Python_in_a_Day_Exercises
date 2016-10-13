@@ -1,0 +1,133 @@
+# Python 2.7.12
+#
+# Author: Madison Dunning
+#
+# Purpose:  The exercises from chapter 11
+
+
+# importing the built-in math functions
+import math
+
+# Exercise 11-1.
+# Write a function that reads the words in words.txt and stores them as keys
+# in a dictionary. It doesn’t matter what the values are. Then you can use the
+# in operator as a fast way to check whether a string is in the dictionary
+def engdicdefine():
+        fin = open('words.txt')
+        line = fin.readline()
+        word = line.strip()
+        count=0
+        for word in fin:
+            count=len(word)
+            wordcount=(word, count)
+            engwords=dict(wordcount)
+
+
+# Exercise 11-2.
+# Dictionaries have a method called get that takes a key and a default value.
+# If the key appears in the dictionary, get returns the corresponding value;
+# otherwise it returns the default value. 
+# Use get to write histogram more concisely. You should be able to eliminate
+# the if statement.
+def histogram(s):
+    d = dict()
+    for c in s:
+        dict_value = d.get(c,0)
+        d[c] = dict_value + 1 
+    return d
+
+def main():
+    histogram('h')
+
+
+# Exercise 11-3.
+# Dictionaries have a method called keys that returns the keys of the
+# dictionary, in no particular order, as a list. Modify print_hist to print
+# the keys and their values in alphabetical order
+
+def print_hist(h):
+    key_list = sorted(h.keys())
+    for key in key_list:
+        print(key, h.get(key))
+
+
+# Exercise 11-4.
+# Modify reverse_lookup so that it builds and returns a list of all keys that
+# map to v, or an empty list if there are none.
+def reverse_lookup(d, v):
+    list_of_matches = []
+    for k in d:
+        if d[k] == v:
+            list_of_matches.append(k)
+    return list_of_matches
+
+
+# Exercise 11-5.
+# Read the documentation of the dictionary method setdefault and use it to
+# write a more concise version of invert_dict. 
+def invert_dict(dic):
+    inverse = {}
+    for key, val in dic.items():
+        inverse.setdefault(val, []).append(key)
+    return inverse
+
+
+# Exercise 11-7.
+# Memoize the Ackermann function from Exercise 6-5 and see if memoization
+# makes it possible to evaluate the function with bigger arguments. Hint: no.
+known_m = {}
+known_n = {}
+def A(m,n):
+    if m in known_m and n in known_n:
+            return 
+
+    
+    if m == 0:
+        return n+1
+        
+    if n == 0:
+        return A(m-1,1)
+
+    return A(m-1, A(m,n-1))
+
+# Exercise 11-9.
+# If you did Exercise 10-8, you already have a function named has_duplicates
+# that takes a list as a parameter and returns True if there is any object
+# that appears more than once in the list. Use a dictionary to write a faster,
+# simpler version of has_duplicates. 
+listOne = [1, 2, 3, 4, 5, 5]
+
+
+def has_dups(myList):
+    dictionary = {}
+    for item in myList:
+        dictionary[item] = 1 + dictionary.get(item, 0)
+        if dictionary[item] > 1:
+            return True
+    return False
+
+print has_dups(listOne)
+
+
+# Exercise 11-10.
+# Two words are “rotate pairs” if you can rotate one of them and get the other.
+# Write a program that reads a wordlist and finds all the rotate pairs.
+import rotate
+
+with open('words.txt') as fd:
+    word_list = fd.read().splitlines()
+
+word_dict = {word: None for word in word_list}
+
+
+def find_rot_pairs():
+    final_list = []
+    for word in word_dict:
+        for i in range(1, 26):
+            if rotate.rotate_word(word, i) in word_dict:
+                final_list.append((word, i, rotate.rotate_word(word, i)))
+    final_list.sort()
+    for pair in final_list:
+        print pair
+
+find_rot_pairs()
