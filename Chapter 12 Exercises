@@ -1,0 +1,247 @@
+# Python 2.7.12
+#
+# Author: Madison Dunning
+#
+# Purpose:  The exercises from chapter 12
+
+
+# importing the built-in math functions
+import math
+
+# Exercise 12-2.
+# In this example, ties are broken by comparing words, so words with the same
+# length appear in reverse alphabetical order. For other applications you
+# might want to break ties at random. Modify this example so that words with
+# the same length appear in random order. Hint: see the random function in the
+# random module.
+import random
+
+with open('words.txt') as fd:
+    words = fd.read().splitlines()
+
+
+def sort_by_length(words):
+    t = []
+    for word in words:
+        t.append((len(word), word))
+        t.sort(reverse=True)
+    res = []
+    for length, word in t:
+        res.append(word)
+    return res
+
+# Exercise 12-3.
+# Write a function called most_frequent that takes a string and prints the
+# letters in decreasing order of frequency. Find text samples from several
+# different languages and see how letter frequency varies between languages.
+
+text = 'whatever you want it to say'
+
+def make_dict(x):
+    dictionary = {}
+    for letter in x:
+        dictionary[letter] = 1 + dictionary.get(letter, 0)
+    return dictionary
+
+
+def most_frequent(text):
+    letters = [letter.lower() for letter in text if letter.isalpha()]
+    dictionary = make_dict(letters)
+    result = []
+    for key in dictionary:
+        result.append((dictionary[key], key))
+    result.sort(reverse=True)
+    for count, letter in result:
+        print letter, count
+
+
+# Exercise 12-4.
+# More anagrams!
+# 1. Write a program that reads a word list from a file (see “Reading Word
+# Lists” (page 97)) and prints all the sets of words that are anagrams.
+# The question is, how can you represent the set of letters in a way that can
+# be used as a key?
+#
+# 2. Modify the previous program so that it prints the largest set of anagrams
+# first, followed by the second largest set, and so on.
+#
+# 3. In Scrabble a “bingo” is when you play all seven tiles in your rack,
+# along with a letter on the board, to form an eight-letter word. What set of
+# 8 letters forms the most possible bingos? Hint: there are seven.
+from collections import defaultdict
+
+with open('words.txt', 'r') as fd:
+    words = fd.read().splitlines()
+
+
+def make_anagram_dict(word_list):
+    """Take a list of words, return a dict with a fingerprint as the key
+    and the anagrams made from that fingerprint as the value."""
+    result = defaultdict(list)
+    for word in word_list:
+        fp = ''.join(sorted(word))
+        result[fp].append(word)
+
+    result = {fp: result[fp] for fp in result if len(result[fp]) > 1}
+    return result
+
+
+anagrams = make_anagram_dict(words)
+
+
+def print_anagrams(anagrams):
+    """Uses a generator to call and print 5 items from mydict"""
+    fp = (fp for fp in anagrams)
+
+    print "Sample from anagram dict:"
+    for i in range(1, 6):
+        # call once, print twice
+        fp_next = fp.next()
+        print "%s) %s:" % (i, fp_next), anagrams[fp_next]
+
+    print "..."
+    print "\n"
+
+
+print_anagrams(anagrams)
+
+
+def sort_anagrams(anagrams):
+    """Returns a list of lists containing all anagram matches. The longest list
+     (most anagrams) is at the top"""
+    anagrams_lists = []
+    for fp in anagrams:
+        anagrams_lists.append(anagrams[fp])
+    anagrams_lists.sort(key=len, reverse=True)
+
+    print "Most anagrams:"
+    for i in range(0, 5):
+        print "%s) %d" % ((i + 1), len(anagrams_lists[i])), anagrams_lists[i]
+    print "..."
+    print "\n"
+
+
+sort_anagrams(anagrams)
+
+
+def find_bingos(anagrams):
+    """Filters mydict for keys of length 8. Sorts a list of the values
+     (lists) and sorts by length in reverse order"""
+    candidates = [anagrams[key] for key in anagrams if len(key) == 8]
+    candidates.sort(key=len, reverse=True)
+
+    print "Top Bingos:"
+    for i in range(0, 5):
+        fp = ''.join(sorted(candidates[i][0]))
+        print "%s) %d: %s" % ((i + 1), len(candidates[i]), fp), candidates[i]
+
+    print "..."
+    print "\n"
+
+find_bingos(anagrams)
+
+
+def is_metathesis(reference, test):
+    """If two anagrams mismatch exactly twice they are metathesis pairs.
+     Caution: This function assumes strings of equal length"""
+    i = 0
+    count = 0
+    while i <= (len(reference) - 1):
+        if reference[i] != test[i]:
+            count += 1
+        i += 1
+    if count == 2:
+        return True
+    return False
+
+
+def find_metathesis(anagrams):
+    """mydict values are lists, we use index 0 as a reference and check the
+     rest of the list (1 to end of list) against that reference word."""
+    answer = []
+    for fp in anagrams:
+        reference = anagrams[fp][0]
+        for i in range(1, (len(anagrams[fp]) - 1)):
+            test = anagrams[fp][i]
+            if is_metathesis(reference, test):
+                answer.append([reference, test])
+
+    print "Sample of metathesis pairs:"
+    for i in range(0, 5):
+        print "%s)" % (i + 1), answer[i]
+    print "..."
+
+
+# Exercise 12-5.
+# Two words form a “metathesis pair” if you can transform one into the other
+# by swapping two letters; for example, “converse” and “conserve.” Write a
+# program that finds all of the metathesis pairs in the dictionary. Hint:
+# don’t test all pairs of words, and don’t test all possible swaps.
+word_dict = {word.strip('\r\n'): None for word in open('words.txt', 'r')}
+word_list = [word for word in word_dict]
+word_list.append("a")
+word_list.append("i")
+word_list.sort(key=len)
+
+
+# Exercise 12-6.
+"""
+Here’s another Car Talk Puzzler
+
+What is the longest English word, that remains a valid English word, as you
+remove its letters one at a time? Now, letters can be removed from either end,
+or the middle, but you can’t rearrange any of the letters. Every time you drop
+a letter, you wind up with another English word. If you do that, you’re
+eventually going to wind up with one letter and that too is going to be an
+English word—one that’s found in the dictionary. I want to know what’s the
+longest word and how many letters does it have? I’m going to give you a little
+modest example: Sprite. Ok? You start off with sprite, you take a letter off,
+one from the interior of the word, take the r away, and we’re left with the
+word spite, then we take the e off the end, we’re left with spit, we take the
+s off, we’re left with pit, it, and I. Write a program to find all words that
+can be reduced in this way, and then find the longest one.
+
+This exercise is a little more challenging than most, so here are some
+suggestions:
+
+1. You might want to write a function that takes a word and computes a list of
+all the words that can be formed by removing one letter. These are the
+“children” of the word.
+
+2. Recursively, a word is reducible if any of its children are reducible. As a
+base case, you can consider the empty string reducible.
+
+3. The wordlist I provided, words.txt, doesn’t contain single letter words. So
+you might want to add “I”, “a”, and the empty string.
+
+4. To improve the performance of your program, you might want to memoize the
+words that are known to be reducible.
+"""
+def word_list(textfile='input.txt'):
+    return open(textfile).read().strip().split(" ")
+
+def children(s, wl):
+    i = 0
+    children = []
+    s_len = len(s)
+    while i < len(s):
+        temp = s[:i] + s[i+1:]
+        if temp in wl:
+            children.append(temp)
+        i += 1
+    return children
+
+def check_dict(s, wl, res = [], called = 0):
+    if len(s) == 1 and s in wl:
+        res.append(s)
+    else:
+        for child in children(s, wl):
+        #print(res,'call number ', str(called), 'with s = ', s, 'whose children are: ', children(s, wl))
+            res.append(child)
+            check_dict(child, wl, res, called+1)
+
+    return res
+
+wl = word_list()
+a = check_dict('sprite', wl)
+
